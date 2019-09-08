@@ -47,4 +47,4 @@ for index, item in enumerate(hashtag_list):
         data_json.update({item: data_list})
         
 with open("data.json", "w") as f:
-        f.write(json.dumps(data_json))
+        f.write(json.dumps(data_json, sort_keys=True, indent=4))
