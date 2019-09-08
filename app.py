@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+import os
+import json
 
 url = "https://www.instagram.com/"
 url_login = "https://www.instagram.com/accounts/login/"
@@ -12,6 +14,11 @@ username = ""
 password = ""
 
 selector = "#react-root > section > main > article > div > div > div > div > a > div > div > img"
+
+base_path = os.path.dirname(os.path.abspath(__file__))
+
+data_json = {}
+data_list = []
 
 driver = webdriver.Chrome("./driver/chromedriver")
 
@@ -35,6 +42,9 @@ for index, item in enumerate(hashtag_list):
 
         for i in image_div:
                 print(i, end="\n\n")
-                print(i.get('src'))
+                data_list.append(i.get('src'))
         
-        print("\n ============================================================================ \n")
+        data_json.update({item: data_list})
+        
+with open("data.json", "w") as f:
+        f.write(json.dumps(data_json))
