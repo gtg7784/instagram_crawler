@@ -3,15 +3,16 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import os
 import json
+import time
 
 url = "https://www.instagram.com/"
 url_login = "https://www.instagram.com/accounts/login/"
 url_hashtag = "https://www.instagram.com/explore/tags/"
 
-hashtag_list = ["street", "amekaji", "dandy", "casual"]
+hashtag_list = ["streetlook", "amekajilook", "dandylook", "casuallook"]
 
 username = ""
-password = ""
+password = "!"
 
 selector = "#react-root > section > main > article > div > div > div > div > a > div > div > img"
 
@@ -35,9 +36,13 @@ driver.find_element_by_xpath("/html/body/div[3]/div/div/div[3]/button[2]").click
 
 for index, item in enumerate(hashtag_list):
         driver.get(url_hashtag + item)
+
+        for i in range(100):
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                time.sleep(.5)
+
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
-
         image_div = soup.select(selector)
 
         for i in image_div:
@@ -45,6 +50,8 @@ for index, item in enumerate(hashtag_list):
                 data_list.append(i.get('src'))
         
         data_json.update({item: data_list})
+
+        data_list = []
         
 with open("data.json", "w") as f:
         f.write(json.dumps(data_json, sort_keys=True, indent=4))
